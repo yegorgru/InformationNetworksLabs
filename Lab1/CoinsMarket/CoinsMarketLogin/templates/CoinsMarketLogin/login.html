@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login - CoinsMarket</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'CoinsMarketLogin/styles/login.css' %}">
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>CoinsMarket</h1>
+    </div>
+    <div class="main-content">
+        <div class ="alert-container">
+            {% if messages %}
+                {%for message in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="login-wrapper">
+            <form class="form-signin" method="post">
+                {% csrf_token %}
+                <h2 class="form-signin-heading">Please login</h2>
+                <input type="text" class="form-control" name="username" placeholder="Email Address Or Username" required="" autofocus="" />
+                <input type="password" class="form-control" name="password" placeholder="Password" required=""/>
+                <label class="checkbox">
+                    <input type="checkbox" name="rememberMe"> Remember me
+                </label>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+                <button class="btn btn-link btn-block" onclick="window.location.href='/login/signup_user'">Don't have an account? Sign Up</button>
+            </form>
+        </div>
+    </div>
+    <div class="footer">
+        &copy; 2023 CoinsMarketApp. All rights reserved.
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

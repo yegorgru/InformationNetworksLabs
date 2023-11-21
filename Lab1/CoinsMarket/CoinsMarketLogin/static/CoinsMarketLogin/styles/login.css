@@ -1,0 +1,86 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.header {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 15px;
+    text-align: center;
+}
+
+.footer {
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 15px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.login-wrapper {
+	margin-top: 80px;
+	margin-bottom: 80px;
+}
+
+.form-signin {
+	max-width: 380px;
+	padding: 15px 35px 45px;
+	margin: 0 auto;
+	background-color: #fff;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.form-signin .form-signin-heading {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.form-signin .checkbox {
+	margin-bottom: 30px;
+}
+
+.form-signin .checkbox {
+	font-weight: normal;
+}
+
+.form-signin .form-control {
+	position: relative;
+	font-size: 16px;
+	height: auto;
+	padding: 10px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.form-signin .form-control:focus {
+	z-index: 2;
+}
+
+.form-signin input[type="text"] {
+	margin-bottom: -1px;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.form-signin input[type="password"] {
+	margin-bottom: 20px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+
+.login-wrapper button.btn-link {
+    background-color: transparent;
+    color: #007bff;
+    text-decoration: underline;
+    border: none;
+    padding: 0;
+    font-size: 16px;
+    cursor: pointer;
+    outline: none;
+}
+
+.login-wrapper button.btn-link:hover {
+    text-decoration: underline;
+}
