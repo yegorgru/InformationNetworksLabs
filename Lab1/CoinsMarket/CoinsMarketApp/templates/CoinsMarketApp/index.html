@@ -8,15 +8,30 @@
     <title>CoinsMarket</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'CoinsMarketApp/styles/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'CoinsMarketApp/styles/index.css' %}">
 </head>
 
 <body>
-
     <div class="header">
-        <h1>CoinsMarket</h1>
+        <div class="header-content">
+            <h1>CoinsMarket</h1>
+            <a href="{% url 'account' %}" class="account-link">👤</a>
+        </div>
     </div>
 
     <div class="main-content">
+        <div class = "w-100 alert-container">
+            {% if messages %}
+                {%for message in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
         <div class="coin-card">
             <div class="card m-2" style="width: 18rem;">
                 <img src="{% static 'CoinsMarketApp/images/coin1.jpg' %}" class="card-img-top" alt="Coin 1 Image">

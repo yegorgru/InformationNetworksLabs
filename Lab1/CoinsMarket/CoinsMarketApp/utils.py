@@ -4,14 +4,14 @@ from email_validator import validate_email, EmailNotValidError
 import re
 
 
-def validate_signup_info(username, password, email):
-    if User.objects.filter(username=username).exists():
+def validate_edit_info(user, username, password, email):
+    if user.username != username and User.objects.filter(username=username).exists():
         return "User with such username already exists"
     if not re.match("^[A-Za-z0-9_-]*$", username):
         return "Username can only contain letters, numbers, underscores and dashes"
     if len(username) < 4 or len(username) > 20:
         return "Username should be from 4 to 20 character"
-    if User.objects.filter(email=email).exists():
+    if user.email != email and User.objects.filter(email=email).exists():
         return "User with such email already exists"
     try:
         validate_email(email)

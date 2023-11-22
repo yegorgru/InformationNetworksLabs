@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login - CoinsMarket</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'CoinsMarketApp/styles/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'CoinsMarketApp/styles/edit_account.css' %}">
+</head>
+
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="{% url 'account' %}" class="mr-2 account-link">❮</a>
+            <h1>CoinsMarket</h1>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class ="alert-container">
+            {% if messages %}
+                {%for message in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="login-wrapper">
+            <form class="form-signin" method="post">
+                {% csrf_token %}
+                <h2 class="form-signin-heading">Edit account info</h2>
+                <input type="text" class="form-control" name="username" placeholder="New Username" value="{{ user.username }}"/>
+                <input type="text" class="form-control" name="email" placeholder="New Email Address" value="{{ user.email }}"/>
+                <input type="password" class="form-control" name="password" placeholder="New Password"/>
+                <button class="btn btn-primary btn-block" type="submit">Save</button>
+                <a href="{% url 'account' %}" class="btn btn-primary btn-block btn-success">Cancel</a>
+            </form>
+        </div>
+    </div>
+    <div class="footer">
+        &copy; 2023 CoinsMarketApp. All rights reserved.
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

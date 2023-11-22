@@ -9,6 +9,12 @@ body {
     text-align: center;
 }
 
+.account-link {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 24px;
+}
+
 .footer {
     background-color: #343a40;
     color: #ffffff;

@@ -33,7 +33,10 @@ def login_user(request):
                     messages.success(request, "There Was An Error Logging In, Try Again")
                     return redirect('login')
         else:
-            return render(request, 'CoinsMarketLogin/login.html', {})
+            if request.user.is_authenticated:
+                return redirect('index')
+            else:
+                return render(request, 'CoinsMarketLogin/login.html', {})
     except Exception as e:
         logger = logging.getLogger(__name__)
         logger.error('Exception in login view: ', e)
@@ -54,7 +57,10 @@ def signup_user(request):
             messages.success(request, "Account created")
             return redirect('login')
         else:
-            return render(request, 'CoinsMarketLogin/signup.html', {})
+            if request.user.is_authenticated:
+                return redirect('index')
+            else:
+                return render(request, 'CoinsMarketLogin/signup.html', {})
     except Exception as e:
         logger = logging.getLogger(__name__)
         logger.error('Exception in signup view: ', e)
