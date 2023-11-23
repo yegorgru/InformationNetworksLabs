@@ -14,9 +14,21 @@
 <body>
     <div class="header">
         <div class="header-content">
-            <a href="{% url 'index' %}" class="mr-2 account-link">❮</a>
             <h1>CoinsMarket</h1>
         </div>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-blue w-25">
+            <ul class="navbar-nav mr-auto text-white">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Search</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Account<span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </nav>
     </div>
     <div class="main-content">
         <div class ="alert-container">
@@ -36,13 +48,12 @@
             <p>Username: {{ user.username }}</p>
             <p>Email: {{ user.email }}</p>
             <p>Password: ********</p>
-            <p>Money Balance: ${{ user.money_balance }}</p>
+            <p>Money balance: {{ user_account.balance }} $</p>
         </div>
-
         <div class="action-buttons">
-            <div class="form-inline">
-                <a href="{% url 'edit_account' %}" class="m-1 btn btn-primary">Edit User</a>
-                <a href="{% url 'manage_balance' %}" class="m-1 btn btn-success">Manage Balance</a>
+            <div class="button-wrapper">
+                <a href="{% url 'edit_account' %}" class="m-1 btn btn-primary">Edit account info</a>
+                <a href="{% url 'manage_balance' %}" class="m-1 btn btn-primary btn-success">Manage balance</a>
             </div>
             <a class="btn btn-link btn-block" href="{% url 'logout' %}">Log Out</a>
         </div>

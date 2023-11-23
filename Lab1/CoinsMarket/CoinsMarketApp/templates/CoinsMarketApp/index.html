@@ -10,13 +10,24 @@
     <link rel="stylesheet" href="{% static 'CoinsMarketApp/styles/styles.css' %}">
     <link rel="stylesheet" href="{% static 'CoinsMarketApp/styles/index.css' %}">
 </head>
-
 <body>
     <div class="header">
         <div class="header-content">
             <h1>CoinsMarket</h1>
-            <a href="{% url 'account' %}" class="account-link">👤</a>
         </div>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-blue w-25">
+            <ul class="navbar-nav mr-auto text-white">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account' %}">Account</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
     <div class="main-content">

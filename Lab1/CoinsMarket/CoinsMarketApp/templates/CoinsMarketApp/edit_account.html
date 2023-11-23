@@ -14,9 +14,21 @@
 <body>
     <div class="header">
         <div class="header-content">
-            <a href="{% url 'account' %}" class="mr-2 account-link">❮</a>
             <h1>CoinsMarket</h1>
         </div>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-blue w-25">
+            <ul class="navbar-nav mr-auto text-white">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Search</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'account' %}">Account<span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </nav>
     </div>
     <div class="main-content">
         <div class ="alert-container">
@@ -31,10 +43,10 @@
                 {% endfor %}
             {% endif %}
         </div>
-        <div class="login-wrapper">
-            <form class="form-signin" method="post">
+        <div class="edit-wrapper">
+            <form class="form-edit" method="post">
                 {% csrf_token %}
-                <h2 class="form-signin-heading">Edit account info</h2>
+                <h2 class="form-edit-heading">Edit account info</h2>
                 <input type="text" class="form-control" name="username" placeholder="New Username" value="{{ user.username }}"/>
                 <input type="text" class="form-control" name="email" placeholder="New Email Address" value="{{ user.email }}"/>
                 <input type="password" class="form-control" name="password" placeholder="New Password"/>

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 import logging
 from . import utils
 from django.contrib import messages
+from . import models
 
 
 def index(request):
@@ -18,11 +19,16 @@ def account(request):
             logger.error('Unexpected post request in account view')
         else:
             user = request.user
-            return render(request, 'CoinsMarketApp/account.html', {'user': user})
+            try:
+                user_account = models.Account.objects.get(id=user.id)
+            except models.Account.DoesNotExist:
+                user_account = models.Account(id=user.id, balance=0)
+                user_account.save()
+            return render(request, 'CoinsMarketApp/account.html', {'user': user, 'user_account': user_account})
     except Exception as e:
         logger = logging.getLogger(__name__)
         logger.error('Exception in account view: ', e)
-        return render(request, 'CoinsMarketLogin/login.html', {})
+        return render(request, 'CoinsMarketApp/account.html', {})
 
 
 def edit_account(request):
@@ -49,9 +55,48 @@ def edit_account(request):
     except Exception as e:
         logger = logging.getLogger(__name__)
         logger.error('Exception in edit account view: ', e)
-        return render(request, 'CoinsMarketLogin/login.html', {})
+        return render(request, 'CoinsMarketApp/edit_account.html', {})
 
 
 def manage_balance(request):
-    user = request.user
-    return render(request, 'CoinsMarketApp/manage_balance.html', {'user': user})
+    try:
+        if request.method == "POST":
+            user = request.user
+            try:
+                user_account = models.Account.objects.get(id=user.id)
+            except models.Account.DoesNotExist:
+                user_account = models.Account(id=user.id, balance=0)
+                user_account.save()
+            try:
+                change = int(request.POST["balance_change"])
+            except TypeError:
+                messages.success(request, "Incorrect amount value")
+                return redirect('manage_balance')
+            if change < 0:
+                messages.success(request, "Negative amount value")
+                return redirect('manage_balance')
+            curr_balance = user_account.balance
+            if "add" in request.POST.keys():
+                curr_balance += change
+            elif "withdraw" in request.POST.keys():
+                if curr_balance < change:
+                    messages.success(request, "Not enough money on balance")
+                    return redirect('manage_balance')
+                else:
+                    curr_balance -= change
+            user_account.balance = curr_balance
+            user_account.save()
+            messages.success(request, "Successful balance operation")
+            return redirect('manage_balance')
+        else:
+            user = request.user
+            try:
+                user_account = models.Account.objects.get(id=user.id)
+            except models.Account.DoesNotExist:
+                user_account = models.Account(id=user.id, balance=0)
+                user_account.save()
+            return render(request, 'CoinsMarketApp/manage_balance.html', {'user_account': user_account})
+    except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.error('Exception in manage balance view: ', e)
+        return render(request, 'CoinsMarketApp/manage_balance.html', {})
