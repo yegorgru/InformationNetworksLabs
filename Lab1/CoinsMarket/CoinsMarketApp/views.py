@@ -152,7 +152,7 @@ def edit_coin(request, coin_id):
         else:
             coin = models.Coin.objects.get(pk=coin_id)
             form = forms.CreateCoinForm(instance=coin)
-            return render(request, 'CoinsMarketApp/view_coin.html', {'form': form})
+            return render(request, 'CoinsMarketApp/view_coin.html', {'form': form, 'coin': coin})
     except Exception as e:
         logger = logging.getLogger(__name__)
         logger.error('Exception in edit coin view: ', e)

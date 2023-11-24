@@ -29,3 +29,13 @@
 .form-coin .form-control:focus {
 	z-index: 2;
 }
+
+.coin-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-width: 200px;
+    max-height: 200px;
+    margin: auto;
+    display: block;
+}

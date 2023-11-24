@@ -57,8 +57,21 @@
                 {{form.is_active}}
                 {{form.description}}
                 <p class="mt-2">Obverse and reverse image:</p>
+                <div class="text-center">
+                    {% if coin.image_obverse %}
+                        <img src="{{ coin.image_obverse.url }}" class="coin-img" alt="Coin Image">
+                    {% else %}
+                        <img src="{% static 'CoinsMarketApp/images/default_coin.jpg' %}" class="coin-img" alt="Coin Image">
+                    {% endif %}
+                </div>
                 {{form.image_obverse}}
-                <br>
+                <div class="text-center">
+                    {% if coin.image_reverse %}
+                        <img src="{{ coin.image_reverse.url }}" class="coin-img" alt="Coin Image">
+                    {% else %}
+                        <img src="{% static 'CoinsMarketApp/images/default_coin.jpg' %}" class="coin-img" alt="Coin Image">
+                    {% endif %}
+                </div>
                 {{form.image_reverse}}
                 <button class="btn btn-primary btn-block btn-success" name="save" type="submit">Save</button>
                 <button class="btn btn-primary btn-block" name="delete" type="submit">Delete</button>
