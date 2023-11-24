@@ -1,0 +1,31 @@
+.coin-wrapper {
+	margin-top: 80px;
+	margin-bottom: 80px;
+}
+
+.form-coin {
+	max-width: 800px;
+	padding: 15px 35px 45px;
+	margin: 0 auto;
+	background-color: #fff;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.form-coin .form-coin-heading {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.form-coin .form-control {
+	position: relative;
+	font-size: 16px;
+	height: auto;
+	padding: 10px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.form-coin .form-control:focus {
+	z-index: 2;
+}

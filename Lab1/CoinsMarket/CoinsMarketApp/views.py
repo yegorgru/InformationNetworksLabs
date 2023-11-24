@@ -3,11 +3,15 @@ import logging
 from . import utils
 from django.contrib import messages
 from . import models
+from . import forms
 
 
 def index(request):
     if request.user.is_authenticated:
-        return render(request, 'CoinsMarketApp/index.html')
+        coins = models.Coin.objects.filter(owner=request.user.id)
+        for coin in coins:
+            print(coin.image_obverse)
+        return render(request, 'CoinsMarketApp/index.html', {'coins': coins})
     else:
         return redirect('login')
 
@@ -100,3 +104,56 @@ def manage_balance(request):
         logger = logging.getLogger(__name__)
         logger.error('Exception in manage balance view: ', e)
         return render(request, 'CoinsMarketApp/manage_balance.html', {})
+
+
+def new_coin(request):
+    try:
+        if request.method == "POST":
+            form = forms.CreateCoinForm(request.POST, request.FILES)
+            if form.is_valid():
+                coin_instance = form.save(commit=False)
+                coin_instance.owner = request.user.id
+                coin_instance.save()
+                messages.success(request, "Coin created")
+                return redirect('index')
+            else:
+                logger = logging.getLogger(__name__)
+                for field, errors in form.errors.items():
+                    logger.error(f"Field: {field}, Errors: {', '.join(errors)}")
+                messages.success(request, "Error in form")
+                return redirect('new_coin')
+        else:
+            form = forms.CreateCoinForm()
+            return render(request, 'CoinsMarketApp/new_coin.html', {'form': form})
+    except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.error('Exception in new coin view: ', e)
+        return render(request, 'CoinsMarketApp/new_coin.html', {})
+
+
+def edit_coin(request, coin_id):
+    try:
+        if request.method == "POST":
+            coin = models.Coin.objects.get(pk=coin_id)
+            form = forms.CreateCoinForm(request.POST, request.FILES, instance=coin)
+            if form.is_valid():
+                if "save" in request.POST.keys():
+                    coin.save()
+                elif "delete" in request.POST.keys():
+                    models.Coin.objects.get(pk=coin_id).delete()
+                messages.success(request, "Operation successful")
+                return redirect('index')
+            else:
+                logger = logging.getLogger(__name__)
+                for field, errors in form.errors.items():
+                    logger.error(f"Field: {field}, Errors: {', '.join(errors)}")
+                messages.success(request, "Error in form")
+                return render(request, 'CoinsMarketApp/view_coin.html', {'form': form})
+        else:
+            coin = models.Coin.objects.get(pk=coin_id)
+            form = forms.CreateCoinForm(instance=coin)
+            return render(request, 'CoinsMarketApp/view_coin.html', {'form': form})
+    except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.error('Exception in edit coin view: ', e)
+        return render(request, 'CoinsMarketApp/index.html', {})

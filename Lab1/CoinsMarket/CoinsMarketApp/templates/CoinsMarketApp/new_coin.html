@@ -5,11 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>CoinsMarket</title>
+    <title>Login - CoinsMarket</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'CoinsMarketApp/styles/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'CoinsMarketApp/styles/index.css' %}">
+    <link rel="stylesheet" href="{% static 'CoinsMarketApp/styles/new_coin.css' %}">
 </head>
+
 <body>
     <div class="header">
         <div class="header-content">
@@ -17,8 +18,8 @@
         </div>
         <nav class="navbar navbar-expand-lg navbar-dark bg-blue w-25">
             <ul class="navbar-nav mr-auto text-white">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Search</a>
@@ -29,9 +30,8 @@
             </ul>
         </nav>
     </div>
-
     <div class="main-content">
-        <div class = "w-100 alert-container">
+        <div class ="alert-container">
             {% if messages %}
                 {%for message in messages %}
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -43,32 +43,27 @@
                 {% endfor %}
             {% endif %}
         </div>
-        <div class="coin-card">
-            <div onclick="location.href='{% url 'new_coin' %}';" class="card m-2" role="button" style="width: 18rem;">
-                <img src="{% static 'CoinsMarketApp/images/plus1.png' %}" class="card-img-top" alt="Plus Image">
-                <div class="card-body">
-                    <h5 class="card-title">Add new coin</h5>
-                    <p class="card-text"></p>
-                </div>
-            </div>
-            {% if coins %}
-                {%for coin in coins %}
-                    <div onclick="location.href='{% url 'edit_coin' coin_id=coin.id %}';" class="card m-2" style="width: 18rem;">
-                        {% if coin.image_obverse %}
-                            <img src="{{ coin.image_obverse.url }}" class="card-img-top" alt="Coin Image">
-                        {% else %}
-                            <img src="{% static 'CoinsMarketApp/images/default_coin.jpg' %}" class="card-img-top" alt="Coin Image">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{coin.par}} {{coin.get_currency_display}} {{coin.year}}</h5>
-                            <p class="card-text">Price: ${{coin.price}}</p>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% endif %}
+        <div class="coin-wrapper">
+            <form class="form-coin" method="post" enctype='multipart/form-data'>
+                {% csrf_token %}
+                <h2 class="form-coin-heading">New coin info</h2>
+                {{form.par}}
+                {{form.currency}}
+                {{form.year}}
+                {{form.material}}
+                {{form.weight}}
+                {{form.diameter}}
+                {{form.price}}
+                {{form.is_active}}
+                {{form.description}}
+                <p class="mt-2">Obverse and reverse image:</p>
+                {{form.image_obverse}}
+                {{form.image_reverse}}
+                <button class="btn btn-primary btn-block" type="submit">Add</button>
+                <a href="{% url 'index' %}" class="btn btn-primary btn-block btn-success">Cancel</a>
+            </form>
         </div>
     </div>
-
     <div class="footer">
         &copy; 2023 CoinsMarketApp. All rights reserved.
     </div>

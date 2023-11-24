@@ -6,7 +6,7 @@
     margin: 0 10px 20px 10px;
 }
 
-.coin-card img {
+.card-img-top {
     width: 100%;
     height: 100%;
     object-fit: contain;
