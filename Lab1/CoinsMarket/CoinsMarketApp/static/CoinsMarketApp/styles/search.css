@@ -1,9 +1,9 @@
-.coin-wrapper {
+.search-wrapper {
 	margin-top: 80px;
 	margin-bottom: 80px;
 }
 
-.form-coin {
+.form-search {
 	max-width: 800px;
 	padding: 15px 35px 45px;
 	margin: 0 auto;
@@ -11,12 +11,12 @@
 	border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.form-coin .form-coin-heading {
+.form-search .form-search-heading {
     margin-bottom: 30px;
     text-align: center;
 }
 
-.form-coin .form-control {
+.form-search .form-control {
 	position: relative;
 	font-size: 16px;
 	height: auto;
@@ -26,16 +26,35 @@
 	box-sizing: border-box;
 }
 
-.form-coin .form-control:focus {
+.form-search .form-control:focus {
 	z-index: 2;
 }
 
-.coin-img {
+.range-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.coin-card {
+    margin: 0 10px 20px 10px;
+}
+
+.card-img-top {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    max-width: 300px;
-    max-height: 300px;
+    max-width: 200px;
+    max-height: 200px;
     margin: auto;
     display: block;
+}
+
+@media (min-width: 576px) {
+    .coin-card {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }

@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login - CoinsMarket</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'CoinsMarketApp/styles/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'CoinsMarketApp/styles/search.css' %}">
+</head>
+
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>CoinsMarket</h1>
+        </div>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-blue w-25">
+            <ul class="navbar-nav mr-auto text-white">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account' %}">Account</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="main-content">
+        <div class ="alert-container">
+            {% if messages %}
+                {%for message in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="search-wrapper">
+            <form class="form-search" method="post">
+                {% csrf_token %}
+                <h2 class="form-search-heading">Search parameters</h2>
+                <div class="m-1">
+                    <p>Par range</p>
+                    <div class="range-wrapper">
+                        <input type="number" class="form-control" name="par_min" min="0" step="1"/>
+                        <input type="number" class="form-control" name="par_max" min="0" step="1"/>
+                    </div>
+                </div>
+                <div class="m-1">
+                    <p>Currency</p>
+                    {{form.currency}}
+                </div>
+                <div class="m-1">
+                    <p>Year range</p>
+                    <div class="range-wrapper">
+                        <input type="number" class="form-control" name="year_min" step="1"/>
+                        <input type="number" class="form-control" name="year_max" step="1"/>
+                    </div>
+                </div>
+                <div class="m-1">
+                    <p>Material</p>
+                    {{form.material}}
+                </div>
+                <div class="m-1">
+                    <p>Weight range</p>
+                    <div class="range-wrapper">
+                        <input type="number" class="form-control" min="0" name="weight_min"/>
+                        <input type="number" class="form-control" min="0" name="weight_max"/>
+                    </div>
+                </div>
+                <div class="m-1">
+                    <p>Diameter range</p>
+                    <div class="range-wrapper">
+                        <input type="number" class="form-control" min="0" name="diameter_min"/>
+                        <input type="number" class="form-control" min="0" name="diameter_max"/>
+                    </div>
+                </div>
+                <div class="m-1">
+                    <p>Price range</p>
+                    <div class="range-wrapper">
+                        <input type="number" class="form-control" min="0" step="1" name="price_min"/>
+                        <input type="number" class="form-control" min="0" step="1" name="price_max"/>
+                    </div>
+                </div>
+                <div class="m-1">
+                    <p>Description</p>
+                    {{form.description}}
+                </div>
+                <label class="checkbox">
+                    <input type="checkbox" name="composite"> Composite parameters
+                </label>
+                <button class="btn btn-primary btn-block btn-success" name="search" type="submit">Search</button>
+            </form>
+        </div>
+        <div class="coin-card text-center mb-5">
+            {% if coins %}
+                {%for coin in coins %}
+                    <div onclick="location.href='{% url 'search_coin' coin_id=coin.id %}';" class="card m-2" style="width: 18rem;">
+                        {% if coin.image_obverse %}
+                            <img src="{{ coin.image_obverse.url }}" class="card-img-top" alt="Coin Image">
+                        {% else %}
+                            <img src="{% static 'CoinsMarketApp/images/default_coin.jpg' %}" class="card-img-top" alt="Coin Image">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{coin.par}} {{coin.get_currency_display}} {{coin.year}}</h5>
+                            <p class="card-text">Price: ${{coin.price}}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="footer">
+        &copy; 2023 CoinsMarketApp. All rights reserved.
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

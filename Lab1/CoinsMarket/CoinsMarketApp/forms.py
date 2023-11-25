@@ -20,3 +20,4 @@ class CreateCoinForm(ModelForm):
         self.fields["image_obverse"].widget.attrs.update({'class': 'm-3'})
         self.fields["image_reverse"].widget.attrs.update({'class': 'm-3'})
 
+

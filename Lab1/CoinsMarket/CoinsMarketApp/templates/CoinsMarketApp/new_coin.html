@@ -22,7 +22,7 @@
                     <a class="nav-link" href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Search</a>
+                    <a class="nav-link" href="{% url 'search' %}">Search</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'account' %}">Account</a>
@@ -54,7 +54,6 @@
                 {{form.weight}}
                 {{form.diameter}}
                 {{form.price}}
-                {{form.is_active}}
                 {{form.description}}
                 <p class="mt-2">Obverse and reverse image:</p>
                 {{form.image_obverse}}

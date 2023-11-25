@@ -18,11 +18,11 @@
         </div>
         <nav class="navbar navbar-expand-lg navbar-dark bg-blue w-25">
             <ul class="navbar-nav mr-auto text-white">
-                <li class="nav-item">
+                <li class="nav-item active">
                     <a class="nav-link" href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Search</a>
+                    <a class="nav-link" href="{% url 'search' %}">Search</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'account' %}">Account</a>
@@ -47,15 +47,38 @@
             <form class="form-coin" method="post" enctype='multipart/form-data'>
                 {% csrf_token %}
                 <h2 class="form-coin-heading">Coin info</h2>
-                {{form.par}}
-                {{form.currency}}
-                {{form.year}}
-                {{form.material}}
-                {{form.weight}}
-                {{form.diameter}}
-                {{form.price}}
-                {{form.is_active}}
-                {{form.description}}
+                <div class="m-1">
+                    <p>Par</p>
+                    {{form.par}}
+                </div>
+                <div class="m-1">
+                    <p>Currency</p>
+                    {{form.currency}}
+                </div>
+                <div class="m-1">
+                    <p>Year</p>
+                    {{form.year}}
+                </div>
+                <div class="m-1">
+                    <p>Material</p>
+                    {{form.material}}
+                </div>
+                <div class="m-1">
+                    <p>Weight</p>
+                    {{form.weight}}
+                </div>
+                <div class="m-1">
+                    <p>Diameter</p>
+                    {{form.diameter}}
+                </div>
+                <div class="m-1">
+                    <p>Price</p>
+                    {{form.price}}
+                </div>
+                <div class="m-1">
+                    <p>Description</p>
+                    {{form.description}}
+                </div>
                 <p class="mt-2">Obverse and reverse image:</p>
                 <div class="text-center">
                     {% if coin.image_obverse %}

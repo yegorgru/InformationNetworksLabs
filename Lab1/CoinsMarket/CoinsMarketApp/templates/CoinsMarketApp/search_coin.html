@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login - CoinsMarket</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'CoinsMarketApp/styles/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'CoinsMarketApp/styles/search_coin.css' %}">
+</head>
+
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>CoinsMarket</h1>
+        </div>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-blue w-25">
+            <ul class="navbar-nav mr-auto text-white">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'search' %}">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account' %}">Account</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="main-content">
+        <div class ="alert-container">
+            {% if messages %}
+                {%for message in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="coin-wrapper mb-5">
+            <div class="container mt-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="form-coin-heading">Coin Info</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="font-weight-bold">Par:</label>
+                                <p>{{ coin.par }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="font-weight-bold">Currency:</label>
+                                <p>{{ coin.get_currency_display }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="font-weight-bold">Year:</label>
+                                <p>{{ coin.year }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="font-weight-bold">Material:</label>
+                                <p>{{ coin.get_material_display }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="font-weight-bold">Weight:</label>
+                                <p>{{ coin.weight }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="font-weight-bold">Diameter:</label>
+                                <p>{{ coin.diameter }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="font-weight-bold">Price:</label>
+                                <p>{{ coin.price }}</p>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="font-weight-bold">Description:</label>
+                                <p>{{ coin.description }}</p>
+                            </div>
+                        </div>
+                        <div class="text-center mb-3">
+                            {% if coin.image_obverse %}
+                                <img src="{{ coin.image_obverse.url }}" class="coin-img" alt="Obverse Coin Image">
+                            {% else %}
+                                <img src="{% static 'CoinsMarketApp/images/default_coin.jpg' %}" class="coin-img" alt="Default Coin Image">
+                            {% endif %}
+                        </div>
+
+                        <div class="text-center mb-3">
+                            {% if coin.image_reverse %}
+                                <img src="{{ coin.image_reverse.url }}" class="coin-img" alt="Reverse Coin Image">
+                            {% else %}
+                                <img src="{% static 'CoinsMarketApp/images/default_coin.jpg' %}" class="coin-img" alt="Default Coin Image">
+                            {% endif %}
+                        </div>
+
+                        <form class="form-coin" method="post" enctype='multipart/form-data'>
+                            {% csrf_token %}
+                            <button class="btn btn-primary btn-block btn-success" name="buy" type="submit">Buy</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        &copy; 2023 CoinsMarketApp. All rights reserved.
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -15,7 +15,7 @@ class Coin(models.Model):
         ("USD", "Dollar"),
         ("UC", "USA Cent"),
         ("EUR", "Euro"),
-        ("EC", "Euro"),
+        ("EC", "Eurocent"),
         ("CZK", "Czech Koruna"),
         ("HL", "Czech Heller"),
         ("PLN", "Zloty"),
@@ -32,16 +32,16 @@ class Coin(models.Model):
         ("Br", "Brass"),
     ]
     owner = models.IntegerField()
-    par = models.IntegerField(validators=[MinValueValidator(1)])
-    currency = models.CharField(max_length=3, choices=CURRENCY)
-    year = models.IntegerField()
-    material = models.CharField(max_length=2, choices=MATERIAL)
-    description = models.CharField(max_length=200)
+    par = models.IntegerField(validators=[MinValueValidator(1)], blank=True)
+    currency = models.CharField(max_length=3, choices=CURRENCY, blank=True)
+    year = models.IntegerField(blank=True)
+    material = models.CharField(max_length=2, choices=MATERIAL, blank=True)
+    weight = models.FloatField(validators=[MinValueValidator(0)], blank=True)
+    diameter = models.FloatField(validators=[MinValueValidator(0)], blank=True)
+    price = models.IntegerField(validators=[MinValueValidator(1)], blank=True)
+    description = models.CharField(max_length=200, blank=True)
     image_obverse = models.ImageField(upload_to='uploads/', blank=True)
     image_reverse = models.ImageField(upload_to='uploads/', blank=True)
-    weight = models.FloatField(validators=[MinValueValidator(0)])
-    diameter = models.FloatField(validators=[MinValueValidator(0)])
-    price = models.IntegerField(validators=[MinValueValidator(1)])
 
 
 class DealHistory(models.Model):
