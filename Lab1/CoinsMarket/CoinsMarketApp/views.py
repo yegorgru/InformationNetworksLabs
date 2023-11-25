@@ -4,6 +4,7 @@ from . import utils
 from django.contrib import messages
 from . import models
 from . import forms
+from django.contrib.auth.models import User
 
 
 def index(request):
@@ -153,6 +154,8 @@ def edit_coin(request, coin_id):
                 return render(request, 'CoinsMarketApp/view_coin.html', {'form': form})
         else:
             coin = models.Coin.objects.get(pk=coin_id)
+            if coin.owner != request.user.id:
+                return redirect('index')
             form = forms.CreateCoinForm(instance=coin)
             return render(request, 'CoinsMarketApp/view_coin.html', {'form': form, 'coin': coin})
     except Exception as e:
@@ -266,7 +269,8 @@ def search_coin(request, coin_id):
             if curr_balance < price:
                 messages.success(request, "Not enough money on balance")
                 coin = models.Coin.objects.get(pk=coin_id)
-                return render(request, 'CoinsMarketApp/search_coin.html', {'coin': coin})
+                user = User.objects.get(id=coin.owner)
+                return render(request, 'CoinsMarketApp/search_coin.html', {'coin': coin, 'owner': user.username})
             else:
                 curr_balance -= price
             user_account.balance = curr_balance
@@ -285,8 +289,9 @@ def search_coin(request, coin_id):
             return redirect('index')
         else:
             coin = models.Coin.objects.get(pk=coin_id)
-            return render(request, 'CoinsMarketApp/search_coin.html', {'coin': coin})
+            user = User.objects.get(id=coin.owner)
+            return render(request, 'CoinsMarketApp/search_coin.html', {'coin': coin, 'owner': user.username})
     except Exception as e:
         logger = logging.getLogger(__name__)
         logger.error('Exception in search coin view: ', e)
-        return render(request, 'CoinsMarketApp/index.html', {})
+        return redirect('search')
