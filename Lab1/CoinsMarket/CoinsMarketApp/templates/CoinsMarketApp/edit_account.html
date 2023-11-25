@@ -24,6 +24,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'search' %}">Search</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'history' %}">History</a>
+                </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'account' %}">Account</a>
                 </li>
@@ -48,7 +51,7 @@
                 {% csrf_token %}
                 <h2 class="form-edit-heading">Edit account info</h2>
                 <input type="password" class="form-control" name="curr_password" placeholder="Password" required=""/>
-                <input type="text" class="form-control" name="username" placeholder="New Username" value="{{ user.username }}"/>
+                <input type="text" class="form-control" name="username" placeholder="New Username" value="{{ user.username }}" maxlength="30"/>
                 <input type="text" class="form-control" name="email" placeholder="New Email Address" value="{{ user.email }}"/>
                 <input type="password" class="form-control" name="password" placeholder="New Password"/>
                 <button class="btn btn-primary btn-block" type="submit">Save</button>

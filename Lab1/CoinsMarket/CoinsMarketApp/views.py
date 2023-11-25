@@ -6,6 +6,7 @@ from . import models
 from . import forms
 from django.contrib.auth.models import User
 from django.urls import reverse
+from itertools import chain
 
 
 def index(request):
@@ -92,12 +93,18 @@ def manage_balance(request):
             curr_balance = user_account.balance
             if "add" in request.POST.keys():
                 curr_balance += change
+                balance_event = models.BalanceHistory(user=user_account.id, operation_type="A", amount=change,
+                                                      balance=curr_balance)
+                balance_event.save()
             elif "withdraw" in request.POST.keys():
                 if curr_balance < change:
                     messages.success(request, "Not enough money on balance")
                     return redirect('manage_balance')
                 else:
                     curr_balance -= change
+                    balance_event = models.BalanceHistory(user=user_account.id, operation_type="W", amount=change,
+                                                          balance=curr_balance)
+                    balance_event.save()
             user_account.balance = curr_balance
             user_account.save()
             messages.success(request, "Successful balance operation")
@@ -126,6 +133,11 @@ def new_coin(request):
                 coin_instance = form.save(commit=False)
                 coin_instance.owner = request.user.id
                 coin_instance.save()
+
+                coin_event = models.CoinHistory(user=request.user.id, operation_type="A", coin_info=str(
+                    coin_instance.par) + " " + coin_instance.get_currency_display() + " " + str(coin_instance.year))
+                coin_event.save()
+
                 messages.success(request, "Coin created")
                 return redirect('index')
             else:
@@ -154,8 +166,14 @@ def edit_coin(request, coin_id):
             if form.is_valid():
                 if "save" in request.POST.keys():
                     coin.save()
+                    coin_event = models.CoinHistory(user=request.user.id, operation_type="E", coin_info=str(
+                        coin.par) + " " + coin.get_currency_display() + " " + str(coin.year))
+                    coin_event.save()
                 elif "delete" in request.POST.keys():
-                    models.Coin.objects.get(pk=coin_id).delete()
+                    coin_event = models.CoinHistory(user=request.user.id, operation_type="D", coin_info=str(
+                        coin.par) + " " + coin.get_currency_display() + " " + str(coin.year))
+                    coin_event.save()
+                    coin.delete()
                 messages.success(request, "Operation successful")
                 return redirect('index')
             else:
@@ -313,6 +331,11 @@ def view_coin(request, coin_id):
                     curr_balance -= price
                 user_account.balance = curr_balance
                 user_account.save()
+
+                deal_event = models.DealHistory(user=request.user.id, rhs=User.objects.get(id=coin.owner).username, operation_type="B", coin_info=str(
+                    coin.par) + " " + coin.get_currency_display() + " " + str(coin.year), price=price)
+                deal_event.save()
+
                 try:
                     owner_user_account = models.Account.objects.get(id=coin.owner)
                 except models.Account.DoesNotExist:
@@ -321,6 +344,11 @@ def view_coin(request, coin_id):
                 curr_balance = owner_user_account.balance + price
                 owner_user_account.balance = curr_balance
                 owner_user_account.save()
+
+                deal_event = models.DealHistory(user=coin.owner, rhs=user.username, operation_type="S", coin_info=str(
+                    coin.par) + " " + coin.get_currency_display() + " " + str(coin.year), price=price)
+                deal_event.save()
+
                 coin.owner = user.id
                 coin.save()
                 messages.success(request, "Successful buy")
@@ -339,3 +367,30 @@ def view_coin(request, coin_id):
         logger = logging.getLogger(__name__)
         logger.error('Exception in view coin view: ', e)
         return redirect('index')
+
+
+def history(request):
+    try:
+        if not request.user.is_authenticated:
+            return redirect('login')
+        if request.method == "POST":
+            events = []
+            if "deals" in request.POST.keys():
+                events.extend(models.DealHistory.objects.filter(user=request.user.id))
+            if "coins" in request.POST.keys():
+                events.extend(models.CoinHistory.objects.filter(user=request.user.id))
+            if "balance" in request.POST.keys():
+                events.extend(models.BalanceHistory.objects.filter(user=request.user.id))
+            events = sorted(events, key=lambda event: event.date_time, reverse=True)
+            return render(request, 'CoinsMarketApp/history.html', {'events': events})
+        else:
+            events = []
+            events.extend(models.DealHistory.objects.filter(user=request.user.id))
+            events.extend(models.CoinHistory.objects.filter(user=request.user.id))
+            events.extend(models.BalanceHistory.objects.filter(user=request.user.id))
+            events = sorted(events, key=lambda event: event.date_time, reverse=True)
+            return render(request, 'CoinsMarketApp/history.html', {'events': events})
+    except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.error('Exception in history view: ', e)
+        return render(request, 'CoinsMarketApp/history.html', {})

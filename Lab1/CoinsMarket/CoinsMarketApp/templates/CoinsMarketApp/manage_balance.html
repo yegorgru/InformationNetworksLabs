@@ -24,6 +24,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'search' %}">Search</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'history' %}">History</a>
+                </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'account' %}">Account</a>
                 </li>
@@ -48,7 +51,7 @@
                 <form class="form-balance" method="post">
                     {% csrf_token %}
                     <h2 class="form-balance-heading">Manage Balance</h2>
-                    <p>Current balance: {{ user_account.balance }}</p>
+                    <p>Current balance: {{ user_account.balance }} $</p>
                     <input type="number" min="0" max="1000000" class="form-control" name="balance_change" placeholder="Amount to add or withdraw" value="0" required=""/>
                     <div class="button-wrapper m-1">
                         <button class="m-1 btn btn-primary" type="submit" name="add">Add</button>

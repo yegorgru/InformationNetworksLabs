@@ -44,10 +44,42 @@ class Coin(models.Model):
     image_reverse = models.ImageField(upload_to='uploads/', null=True)
 
 
-class DealHistory(models.Model):
-    lhs = models.IntegerField()
-    rhs = models.IntegerField()
-    coin = models.ForeignKey("Coin", on_delete=models.CASCADE)
-    price = models.IntegerField()
-    is_finished = models.BooleanField(default=False)
+class BaseHistory(models.Model):
     date_time = models.DateTimeField(blank=True, default=datetime.now)
+
+    class Meta:
+        abstract = True
+
+
+class DealHistory(BaseHistory):
+    DEAL_TYPE = [
+        ("B", "Buy"),
+        ("S", "Sell"),
+    ]
+    user = models.IntegerField()
+    rhs = models.CharField(max_length=30)
+    operation_type = models.CharField(max_length=1, choices=DEAL_TYPE)
+    coin_info = models.CharField(max_length=30)
+    price = models.IntegerField()
+
+
+class BalanceHistory(BaseHistory):
+    OPERATION_TYPE = [
+        ("A", "Add"),
+        ("W", "Withdraw"),
+    ]
+    user = models.IntegerField()
+    operation_type = models.CharField(max_length=1, choices=OPERATION_TYPE)
+    amount = models.IntegerField()
+    balance = models.IntegerField()
+
+
+class CoinHistory(BaseHistory):
+    OPERATION_TYPE = [
+        ("A", "Add"),
+        ("E", "Edit"),
+        ("D", "Delete"),
+    ]
+    user = models.IntegerField()
+    operation_type = models.CharField(max_length=1, choices=OPERATION_TYPE)
+    coin_info = models.CharField(max_length=30)

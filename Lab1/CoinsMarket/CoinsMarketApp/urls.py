@@ -11,4 +11,5 @@ urlpatterns = [
     path("edit_coin/<int:coin_id>/", views.edit_coin, name='edit_coin'),
     path("view_coin/<int:coin_id>/", views.view_coin, name='view_coin'),
     path('search', views.search, name='search'),
+    path('history', views.history, name='history'),
 ]
