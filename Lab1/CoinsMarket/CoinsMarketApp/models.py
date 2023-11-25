@@ -32,16 +32,16 @@ class Coin(models.Model):
         ("Br", "Brass"),
     ]
     owner = models.IntegerField()
-    par = models.IntegerField(validators=[MinValueValidator(1)], blank=True)
-    currency = models.CharField(max_length=3, choices=CURRENCY, blank=True)
-    year = models.IntegerField(blank=True)
-    material = models.CharField(max_length=2, choices=MATERIAL, blank=True)
-    weight = models.FloatField(validators=[MinValueValidator(0)], blank=True)
-    diameter = models.FloatField(validators=[MinValueValidator(0)], blank=True)
-    price = models.IntegerField(validators=[MinValueValidator(1)], blank=True)
-    description = models.CharField(max_length=200, blank=True)
-    image_obverse = models.ImageField(upload_to='uploads/', blank=True)
-    image_reverse = models.ImageField(upload_to='uploads/', blank=True)
+    par = models.IntegerField(validators=[MinValueValidator(1)])
+    currency = models.CharField(max_length=3, choices=CURRENCY)
+    year = models.IntegerField()
+    material = models.CharField(max_length=2, choices=MATERIAL, null=True)
+    weight = models.FloatField(validators=[MinValueValidator(0)], null=True)
+    diameter = models.FloatField(validators=[MinValueValidator(0)], null=True)
+    price = models.IntegerField(validators=[MinValueValidator(1)])
+    description = models.CharField(max_length=200, null=True)
+    image_obverse = models.ImageField(upload_to='uploads/', null=True)
+    image_reverse = models.ImageField(upload_to='uploads/', null=True)
 
 
 class DealHistory(models.Model):

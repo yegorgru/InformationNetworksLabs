@@ -9,6 +9,6 @@ urlpatterns = [
     path('manage_balance', views.manage_balance, name='manage_balance'),
     path('new_coin', views.new_coin, name='new_coin'),
     path("edit_coin/<int:coin_id>/", views.edit_coin, name='edit_coin'),
-    path("search_coin/<int:coin_id>/", views.search_coin, name='search_coin'),
+    path("view_coin/<int:coin_id>/", views.view_coin, name='view_coin'),
     path('search', views.search, name='search'),
 ]

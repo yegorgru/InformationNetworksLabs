@@ -52,7 +52,7 @@
             </div>
             {% if coins %}
                 {%for coin in coins %}
-                    <div onclick="location.href='{% url 'edit_coin' coin_id=coin.id %}';" class="card m-2" style="width: 18rem;">
+                    <div onclick="location.href='{% url 'view_coin' coin_id=coin.id %}';" class="card m-2">
                         {% if coin.image_obverse %}
                             <img src="{{ coin.image_obverse.url }}" class="card-img-top" alt="Coin Image">
                         {% else %}

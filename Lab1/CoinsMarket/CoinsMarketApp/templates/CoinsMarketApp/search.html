@@ -43,15 +43,15 @@
                 {% endfor %}
             {% endif %}
         </div>
-        <div class="search-wrapper">
+        <div class="search-wrapper w-100 w-sm-75 w-md-50">
             <form class="form-search" method="post">
                 {% csrf_token %}
                 <h2 class="form-search-heading">Search parameters</h2>
                 <div class="m-1">
                     <p>Par range</p>
                     <div class="range-wrapper">
-                        <input type="number" class="form-control" name="par_min" min="0" step="1"/>
-                        <input type="number" class="form-control" name="par_max" min="0" step="1"/>
+                        <input type="number" class="form-control" name="par_min" min="0" step="1" max="1000000"/>
+                        <input type="number" class="form-control" name="par_max" min="0" step="1" max="1000000"/>
                     </div>
                 </div>
                 <div class="m-1">
@@ -61,8 +61,8 @@
                 <div class="m-1">
                     <p>Year range</p>
                     <div class="range-wrapper">
-                        <input type="number" class="form-control" name="year_min" step="1"/>
-                        <input type="number" class="form-control" name="year_max" step="1"/>
+                        <input type="number" class="form-control" name="year_min" step="1" min="-50000" max="50000"/>
+                        <input type="number" class="form-control" name="year_max" step="1" min="-50000" max="50000"/>
                     </div>
                 </div>
                 <div class="m-1">
@@ -72,22 +72,22 @@
                 <div class="m-1">
                     <p>Weight range</p>
                     <div class="range-wrapper">
-                        <input type="number" class="form-control" min="0" name="weight_min"/>
-                        <input type="number" class="form-control" min="0" name="weight_max"/>
+                        <input type="number" class="form-control" min="0" max="10000" name="weight_min"/>
+                        <input type="number" class="form-control" min="0" max="10000" name="weight_max"/>
                     </div>
                 </div>
                 <div class="m-1">
                     <p>Diameter range</p>
                     <div class="range-wrapper">
-                        <input type="number" class="form-control" min="0" name="diameter_min"/>
-                        <input type="number" class="form-control" min="0" name="diameter_max"/>
+                        <input type="number" class="form-control" min="0" max="10000" name="diameter_min"/>
+                        <input type="number" class="form-control" min="0" max="10000" name="diameter_max"/>
                     </div>
                 </div>
                 <div class="m-1">
                     <p>Price range</p>
                     <div class="range-wrapper">
-                        <input type="number" class="form-control" min="0" step="1" name="price_min"/>
-                        <input type="number" class="form-control" min="0" step="1" name="price_max"/>
+                        <input type="number" class="form-control" min="0" max="1000000" step="1" name="price_min"/>
+                        <input type="number" class="form-control" min="0" max="1000000" step="1" name="price_max"/>
                     </div>
                 </div>
                 <div class="m-1">
@@ -103,7 +103,7 @@
         <div class="coin-card text-center mb-5">
             {% if coins %}
                 {%for coin in coins %}
-                    <div onclick="location.href='{% url 'search_coin' coin_id=coin.id %}';" class="card m-2" style="width: 18rem;">
+                    <div onclick="location.href='{% url 'view_coin' coin_id=coin.id %}';" class="card m-2" style="width: 18rem;">
                         {% if coin.image_obverse %}
                             <img src="{{ coin.image_obverse.url }}" class="card-img-top" alt="Coin Image">
                         {% else %}

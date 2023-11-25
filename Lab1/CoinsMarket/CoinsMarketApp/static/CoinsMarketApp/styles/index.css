@@ -2,8 +2,9 @@
     justify-content: space-between;
 }
 
-.coin-card {
-    margin: 0 10px 20px 10px;
+.card {
+    width: 18rem;
+    height: 18rem;
 }
 
 .card-img-top {
