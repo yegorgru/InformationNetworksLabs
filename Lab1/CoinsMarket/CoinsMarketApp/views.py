@@ -375,21 +375,27 @@ def history(request):
             return redirect('login')
         if request.method == "POST":
             events = []
+            is_deals = False
+            is_coins = False
+            is_balance = False
             if "deals" in request.POST.keys():
                 events.extend(models.DealHistory.objects.filter(user=request.user.id))
+                is_deals = True
             if "coins" in request.POST.keys():
                 events.extend(models.CoinHistory.objects.filter(user=request.user.id))
+                is_coins = True
             if "balance" in request.POST.keys():
                 events.extend(models.BalanceHistory.objects.filter(user=request.user.id))
+                is_balance = True
             events = sorted(events, key=lambda event: event.date_time, reverse=True)
-            return render(request, 'CoinsMarketApp/history.html', {'events': events})
+            return render(request, 'CoinsMarketApp/history.html', {'events': events, 'is_deals': is_deals, 'is_coins': is_coins, 'is_balance': is_balance})
         else:
             events = []
             events.extend(models.DealHistory.objects.filter(user=request.user.id))
             events.extend(models.CoinHistory.objects.filter(user=request.user.id))
             events.extend(models.BalanceHistory.objects.filter(user=request.user.id))
             events = sorted(events, key=lambda event: event.date_time, reverse=True)
-            return render(request, 'CoinsMarketApp/history.html', {'events': events})
+            return render(request, 'CoinsMarketApp/history.html', {'events': events, 'is_deals': True, 'is_coins': True, 'is_balance': True})
     except Exception as e:
         logger = logging.getLogger(__name__)
         logger.error('Exception in history view: ', e)

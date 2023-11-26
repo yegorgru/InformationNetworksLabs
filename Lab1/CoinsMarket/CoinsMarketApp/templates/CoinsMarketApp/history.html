@@ -52,15 +52,33 @@
                 {% csrf_token %}
                 <h2 class="form-history-heading">History parameters</h2>
                 <div class="d-flex justify-content-between">
-                    <label class="checkbox">
-                        <input type="checkbox" name="deals" checked> Deals
-                    </label>
-                    <label class="checkbox">
-                        <input type="checkbox" name="coins" checked> Coins
-                    </label>
-                    <label class="checkbox">
-                        <input type="checkbox" name="balance" checked> Balance
-                    </label>
+                    {% if is_deals %}
+                        <label class="checkbox">
+                            <input type="checkbox" name="deals" checked> Deals
+                        </label>
+                    {% else %}
+                        <label class="checkbox">
+                            <input type="checkbox" name="deals"> Deals
+                        </label>
+                    {% endif %}
+                    {% if is_coins %}
+                        <label class="checkbox">
+                            <input type="checkbox" name="coins" checked> Coins
+                        </label>
+                    {% else %}
+                        <label class="checkbox">
+                            <input type="checkbox" name="coins"> Coins
+                        </label>
+                    {% endif %}
+                    {% if is_balance %}
+                        <label class="checkbox">
+                            <input type="checkbox" name="balance" checked> Balance
+                        </label>
+                    {% else %}
+                        <label class="checkbox">
+                            <input type="checkbox" name="balance"> Balance
+                        </label>
+                    {% endif %}
                 </div>
                 <button class="btn btn-primary btn-block btn-success" name="apply" type="submit">Apply</button>
             </form>
