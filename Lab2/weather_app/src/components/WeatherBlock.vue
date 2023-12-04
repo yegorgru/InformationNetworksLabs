@@ -1,18 +1,18 @@
 <script setup>
+    import axios from 'axios'
 </script>
 
 <template>
-    <div class="container mt-3">
+    <div class="container mt-3" v-if="weatherLoaded">
         <div class="d-flex flex-lg-row flex-column">
             <div class="card w-100 mb-3 mb-lg-0 p-3 main-weather">
                 <h1>Today</h1>
-                <p>date</p>
-                <small>time</small>
-                <h2 class="place"> city <small> country </small></h2>
+                <h2 class="place"> {{cityName}} {{ country }} </h2>
                 <div class="temperature">
-                    <h1> temperature &deg;C </h1>
-                    <h2> description </h2>
+                    <h1> {{ temperature }} &deg;C <img :src="icon" alt="icon weather"></h1>
+                    <h2> {{ description }} </h2>
                 </div>
+                <p>{{date}} {{time}}</p>
             </div>
             <div class="card w-100 p-3 additional-weather">
                 <div class="mb-3">
@@ -21,7 +21,7 @@
                 <div>
                     <div class="d-flex justify-content-between">
                         <h6>Wind Speed</h6>
-                        <p>{{ wind }} m/s</p>
+                        <p>{{ windSpeed }} m/s</p>
                     </div>
                     <div class="d-flex justify-content-between">
                         <h6>Pressure</h6>
@@ -35,9 +35,68 @@
             </div>
         </div>
     </div>
+    <div class="w-100 d-flex justify-content-center align-items-center" v-if="isError">
+      <div class="w-50 alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Failed to fetch data for this city</strong>
+      </div>
+    </div>
 </template>
 
 <script>
+    export default (await import('vue')).defineComponent({
+        name: 'Weather',
+        components: {
+        },
+        props: {
+            city: String,
+        },
+        data() {
+            return {
+                city: this.city,
+                temperature: null,
+                description: null,
+                date: null,
+                time: null,
+                cityName: null,
+                country: null,
+                windSpeed: null,
+                pressure: null,
+                humidity: null,
+                icon: null,
+                months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                weatherLoaded: false,
+                isError: false,
+            }
+        },
+        async created() {
+            try {
+                this.isError = false;
+                this.weatherLoaded = false;
+                let url = "https://api.openweathermap.org/data/2.5/weather?q=" + this.city + "&units=metric&appid=0164a6f5ecd0e56453dce5381fc06fd5";
+                const response = await axios.get(url);
+                const weatherData = response.data;
+                this.temperature = Math.round(weatherData.main.temp);
+                this.description = weatherData.weather[0].description;
+                const currDate = new Date();
+                this.date = currDate.getDate() + ' ' + this.months[currDate.getMonth()] + ' ' + currDate.getFullYear();
+                const hours = currDate.getHours().toString().padStart(2, '0');
+                const minutes = currDate.getMinutes().toString().padStart(2, '0');
+                const seconds = currDate.getSeconds().toString().padStart(2, '0');
+                this.time = hours + ':' + minutes + ':' + seconds;
+                this.cityName = weatherData.name;
+                this.country = weatherData.sys.country;
+                this.windSpeed = weatherData.wind.speed;
+                this.pressure = weatherData.main.pressure;
+                this.humidity = weatherData.main.humidity;
+                this.icon = "https://api.openweathermap.org/img/w/" + weatherData.weather[0].icon + ".png";
+                await this.$nextTick();
+                this.weatherLoaded = true;
+            } catch (error) {
+                this.weatherLoaded = false;
+                this.isError = true;
+            }
+        }
+    })
 </script>
 
 <style>
