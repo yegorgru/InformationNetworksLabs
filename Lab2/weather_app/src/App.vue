@@ -1,4 +1,5 @@
 <script setup>
+    import WeatherBlock from './components/WeatherBlock.vue'
 </script>
 
 <template>
@@ -8,7 +9,7 @@
         <div class="input-group">
             <input type="text" id="cityInput" class="form-control" placeholder="Enter city name" aria-label="City" v-model="city">
             <div class="input-group-append">
-                <button class="btn btn-primary" type="button" id="searchButton">Search</button>
+                <button class="btn btn-primary" type="button" id="searchButton" @click="search">Search</button>
             </div>
         </div>
     </header>
@@ -18,6 +19,24 @@
 </template>
 
 <script>
+    export default (await import('vue')).defineComponent({
+        name: 'App',
+        components: {
+        },
+        data() {
+            return {
+                city: '',
+                weatherLoaded: false,
+            }
+        },
+        methods: {
+            async search() {
+                this.weatherLoaded = false;
+                await this.$nextTick();
+                this.weatherLoaded = true;
+            }
+        }
+    })
 </script>
 
 <style>
