@@ -1,5 +1,6 @@
 <script setup>
     import axios from 'axios'
+    import apiKey from '../config';
 </script>
 
 <template>
@@ -28,7 +29,7 @@
     async created() {
         try {
             this.forecastLoaded = false;   
-            let url = "https://api.openweathermap.org/data/2.5/forecast?q=" + this.city + "&units=metric&appid=0164a6f5ecd0e56453dce5381fc06fd5";
+            let url = "https://api.openweathermap.org/data/2.5/forecast?q=" + this.city + "&units=metric&appid=" + apiKey;
             const response = await axios.get(url);
             const forecastData = response.data.list;
             this.forecast = forecastData

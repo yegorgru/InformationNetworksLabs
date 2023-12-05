@@ -1,5 +1,6 @@
 <script setup>
     import axios from 'axios'
+    import apiKey from '../config';
 </script>
 
 <template>
@@ -82,7 +83,7 @@
             try {
                 this.isError = false;
                 this.weatherLoaded = false;
-                let url = "https://api.openweathermap.org/data/2.5/weather?q=" + this.city + "&units=metric&appid=0164a6f5ecd0e56453dce5381fc06fd5";
+                let url = "https://api.openweathermap.org/data/2.5/weather?q=" + this.city + "&units=metric&appid=" + apiKey;
                 const response = await axios.get(url);
                 const weatherData = response.data;
                 this.temperature = Math.round(weatherData.main.temp);
