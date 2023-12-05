@@ -1,13 +1,13 @@
 <script setup>
     import WeatherBlock from './components/WeatherBlock.vue'
+    import ForecastBlock from './components/ForecastBlock.vue'
 </script>
 
 <template>
     <header class="container h-100 p-5">
         <h1 class="mb-5">Weather App</h1>
-
         <div class="input-group">
-            <input type="text" id="cityInput" class="form-control" placeholder="Enter city name" aria-label="City" v-model="city">
+            <input type="text" id="cityInput" class="form-control" placeholder="Enter city name" maxlength="50" aria-label="City" v-model="city">
             <div class="input-group-append">
                 <button class="btn btn-primary" type="button" id="searchButton" @click="search">Search</button>
             </div>
@@ -15,6 +15,7 @@
     </header>
     <main>
         <WeatherBlock :city="city" v-if="weatherLoaded"></WeatherBlock>
+        <ForecastBlock :city="city" v-if="weatherLoaded"></ForecastBlock>
     </main>
 </template>
 

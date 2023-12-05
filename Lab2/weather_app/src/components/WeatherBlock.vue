@@ -5,7 +5,7 @@
 <template>
     <div class="container mt-3" v-if="weatherLoaded">
         <div class="d-flex flex-lg-row flex-column">
-            <div class="card w-100 mb-3 mb-lg-0 p-3 main-weather">
+            <div class="card w-100 mb-3 mb-lg-0 p-3 main-weather m-1">
                 <h1>Today</h1>
                 <h2 class="place"> {{cityName}} {{ country }} </h2>
                 <div class="temperature">
@@ -14,11 +14,15 @@
                 </div>
                 <p>{{date}} {{time}}</p>
             </div>
-            <div class="card w-100 p-3 additional-weather">
+            <div class="card w-100 p-3 additional-weather m-1">
                 <div class="mb-3">
                     <h4>Additional Information</h4>
                 </div>
                 <div>
+                    <div class="d-flex justify-content-between">
+                        <h6>Feels Like</h6>
+                        <p>{{ feelsLike }} &deg;C</p>
+                    </div>
                     <div class="d-flex justify-content-between">
                         <h6>Wind Speed</h6>
                         <p>{{ windSpeed }} m/s</p>
@@ -30,6 +34,10 @@
                     <div class="d-flex justify-content-between">
                         <h6>Humidity</h6>
                         <p>{{ humidity }} %</p>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <h6>Cloudiness</h6>
+                        <p>{{ cloudiness }} %</p>
                     </div>
                 </div>
             </div>
@@ -59,9 +67,11 @@
                 time: null,
                 cityName: null,
                 country: null,
+                feelsLike: null,
                 windSpeed: null,
                 pressure: null,
                 humidity: null,
+                cloudiness: null,
                 icon: null,
                 months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
                 weatherLoaded: false,
@@ -85,9 +95,11 @@
                 this.time = hours + ':' + minutes + ':' + seconds;
                 this.cityName = weatherData.name;
                 this.country = weatherData.sys.country;
+                this.feelsLike = Math.round(weatherData.main.feels_like);
                 this.windSpeed = weatherData.wind.speed;
                 this.pressure = weatherData.main.pressure;
                 this.humidity = weatherData.main.humidity;
+                this.cloudiness = weatherData.clouds.all;
                 this.icon = "https://api.openweathermap.org/img/w/" + weatherData.weather[0].icon + ".png";
                 await this.$nextTick();
                 this.weatherLoaded = true;
