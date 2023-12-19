@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Login - Planner</title>
+    <title>Signup - Planner</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'Planner/styles/login.css' %}">
 </head>
@@ -20,17 +20,19 @@
         <div class="login-wrapper">
             <div class="form-signin">
                 {% csrf_token %}
-                <h2 class="form-signin-heading">Please login</h2>
-                <input type="text" class="form-control" name="username" placeholder="Email Address Or Username" required="" autofocus="" id="username" />
-                <input type="password" class="form-control" name="password" placeholder="Password" required="" id="password"/>
-                <button class="btn btn-lg btn-primary btn-block" onclick="login()">Login</button>
-                <button class="btn btn-link btn-block" onclick="window.location.href='/home/signup'">Don't have an account? Sign Up</button>
-            </div>
+                <h2 class="form-signin-heading">Signup</h2>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Username" required="" maxlength="30" autofocus=""/>
+                <input type="text" class="form-control" id="email" name="email" placeholder="Email Address" required=""/>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required=""/>
+                <button class="btn btn-lg btn-primary btn-block" onclick="signup()">Signup</button>
+                <button class="btn btn-link btn-block" onclick="window.location.href='/home/login'">Already have an account? Log In</button>
+           </div>
         </div>
     </div>
     <div class="footer">
         &copy; 2023 Planner. All rights reserved.
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const authToken = localStorage.getItem('authToken');
@@ -39,16 +41,17 @@
             }
         });
 
-        function login() {
+        function signup() {
             const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            fetch('/api/login/', {
+            fetch('/api/signup/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ username, email, password }),
             })
             .then(response => {
                 if (!response.ok) {
@@ -60,9 +63,7 @@
                 return response.json();
             })
             .then(data => {
-                const token = data.token;
-                localStorage.setItem('authToken', token);
-                window.location.href = '/';
+                window.location.href = '/home/login';
             })
             .catch(error => {
                 console.log('Failed to signup');
@@ -70,6 +71,7 @@
         }
 
         function displayError(message) {
+            console.log(message);
             const alertElement = document.createElement('div');
             alertElement.className = 'alert alert-danger alert-dismissible fade show';
             alertElement.innerHTML = `
