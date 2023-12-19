@@ -5,6 +5,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from rest_framework.authtoken.models import Token
 from . import utils
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
+from .models import Task
+from .serializers import TaskSerializer
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
+from django.utils.decorators import method_decorator
 
 
 class SignUpView(APIView):
@@ -44,3 +51,23 @@ class LoginView(APIView):
             return Response({'token': token.key, 'message': 'Login successful.'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid login credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class UserTasksView(generics.ListAPIView):
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+
+    @method_decorator(cache_page(60 * 15))
+    @method_decorator(vary_on_cookie)
+    def get(self, request, *args, **kwargs):
+        date_param = self.kwargs.get('date', None)
+        try:
+            if date_param:
+                tasks = Task.objects.filter(user=request.user, date=date_param)
+            else:
+                raise ValueError('Date parameter is required')
+
+            serializer = self.get_serializer(tasks, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except ValueError:
+            return Response({'error': 'Invalid date format'}, status=status.HTTP_400_BAD_REQUEST)
