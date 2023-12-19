@@ -21,6 +21,33 @@
     </div>
 
     <script>
+        function fetchTasks(date) {
+            const apiUrl = `/api/tasks/${date}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const taskList = document.getElementById('taskList');
+                    taskList.innerHTML = '';  // Clear existing list items
+
+                    data.forEach(task => {
+                        const listItem = document.createElement('li');
+                        listItem.className = 'list-group-item';
+                        const statusIcon = task.status ? '✔' : ' ';
+                        listItem.innerHTML = `<strong>${task.name} ${statusIcon}</strong>`;
+                        taskList.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Error fetching tasks:', error));
+        }
+        document.getElementById('dateInput').addEventListener('change', function () {
+            fetchTasks(this.value);
+        });
+
+        const currentDateInput = document.getElementById('dateInput');
+        const initialDate = currentDateInput.value || new Date().toISOString().split('T')[0];
+        fetchTasks(initialDate);
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function () {
             const authToken = localStorage.getItem('authToken');
 
