@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Planner</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container mt-4">
         <div class="form-group">
             <label for="dateInput">Select Date:</label>
-            <input type="date" class="form-control" id="dateInput" value="{{ current_date }}">
+            <input type="date" class="form-control" id="dateInput" value="{% now 'Y-m-d' %}">
         </div>
 
         <ul class="list-group" id="taskList">
 
         </ul>
 
-        <button class="btn btn-primary" onclick="location.href='/home/add_task'">Add Task</button>
+        <button class="btn btn-primary" onclick="location.href='/home/create_task'">Add Task</button>
     </div>
 
     <script>
@@ -35,25 +35,41 @@
                         const statusIcon = task.status ? '✔' : ' ';
                         listItem.innerHTML = `<strong>${task.name} ${statusIcon}</strong>`;
                         taskList.appendChild(listItem);
+                        console.log(task.name);
                     });
                 })
                 .catch(error => console.error('Error fetching tasks:', error));
         }
-        document.getElementById('dateInput').addEventListener('change', function () {
-            fetchTasks(this.value);
-        });
 
-        const currentDateInput = document.getElementById('dateInput');
-        const initialDate = currentDateInput.value || new Date().toISOString().split('T')[0];
-        fetchTasks(initialDate);
-    </script>
-    <script>
+        function fetchTasksCurr() {
+            const currentDateInput = document.getElementById('dateInput');
+            const initialDate = currentDateInput.value || new Date().toISOString().split('T')[0];
+            currentDateInput.value = initialDate;  // Set the current date to the input
+            fetchTasks(initialDate);
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const authToken = localStorage.getItem('authToken');
 
             if (!authToken) {
                 window.location.href = '/home/login/';
             }
+
+            const currentDateInput = document.getElementById('dateInput');
+            const initialDate = currentDateInput.value || new Date().toISOString().split('T')[0];
+            currentDateInput.value = initialDate;  // Set the current date to the input
+            fetchTasks(initialDate);
+
+            currentDateInput.addEventListener('change', function () {
+                fetchTasks(this.value);
+            });
+        });
+
+        window.addEventListener('load', function () {
+            const currentDateInput = document.getElementById('dateInput');
+            const initialDate = currentDateInput.value || new Date().toISOString().split('T')[0];
+            currentDateInput.value = initialDate;
+            fetchTasks(initialDate);
         });
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

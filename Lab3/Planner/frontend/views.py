@@ -11,3 +11,7 @@ def signup_view(request):
 
 def index_view(request):
     return render(request, 'index.html')
+
+
+def create_task(request):
+    return render(request, 'create_task.html')

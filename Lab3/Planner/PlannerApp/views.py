@@ -9,9 +9,6 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .models import Task
 from .serializers import TaskSerializer
-from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_cookie
-from django.utils.decorators import method_decorator
 
 
 class SignUpView(APIView):
@@ -19,8 +16,6 @@ class SignUpView(APIView):
         username = request.data.get('username')
         email = request.data.get('email')
         password = request.data.get('password')
-
-        print(username, email, password)
 
         val_result = utils.validate_signup_info(username, password, email)
         if val_result != "":
@@ -57,8 +52,6 @@ class UserTasksView(generics.ListAPIView):
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
 
-    @method_decorator(cache_page(60 * 15))
-    @method_decorator(vary_on_cookie)
     def get(self, request, *args, **kwargs):
         date_param = self.kwargs.get('date', None)
         try:
@@ -71,3 +64,27 @@ class UserTasksView(generics.ListAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except ValueError:
             return Response({'error': 'Invalid date format'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreateTaskView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        name = request.data.get('name')
+        description = request.data.get('description')
+        date = request.data.get('date')
+
+        task = Task.objects.create(
+            user=request.user,
+            name=name,
+            description=description,
+            date=date,
+            status=False
+        )
+        task.save()
+
+        response_data = {
+            'message': 'Task created successfully.'
+        }
+
+        return Response(response_data, status=status.HTTP_201_CREATED)

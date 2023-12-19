@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planner</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="alert-container" id="alertContainer"></div>
+    <div class="container mt-4">
+        <h2>Create Task</h2>
+        <div>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="taskName">Task Name:</label>
+                <input type="text" class="form-control" id="taskName" placeholder="Enter task name" minlength="4" value="task" required maxlength="254">
+            </div>
+
+            <div class="form-group">
+                <label for="taskDescription">Task Description:</label>
+                <textarea class="form-control" id="taskDescription" rows="3" placeholder="Enter task description" maxlength="1000"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="taskDate">Task Date:</label>
+                <input type="date" class="form-control" id="taskDate" value="{% now 'Y-m-d' %}" required>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="createTask()">Create Task</button>
+        </div>
+    </div>
+
+    <script>
+        function createTask() {
+            const name = document.getElementById('taskName').value;
+            const description = document.getElementById('taskDescription').value;
+            const date = document.getElementById('taskDate').value;
+
+            if (name.length < 4) {
+                displayError('Task name must be at least 4 characters long.');
+                return;
+            }
+
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            fetch('/api/create_task/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                },
+                body: JSON.stringify({ name, date, description }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    response.json().then(data => {
+                        displayError(data.error);
+                    })
+                    return Promise.reject();
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Task created successfully:', data.message);
+                window.location.href = '/';
+                fetchTasksCurr();
+            })
+            .catch(error => {
+                console.log('Failed to create task');
+            });
+        }
+
+        function displayError(message) {
+            console.log(message);
+            const alertElement = document.createElement('div');
+            alertElement.className = 'alert alert-danger alert-dismissible fade show';
+            alertElement.innerHTML = `
+                ${message}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            `;
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.appendChild(alertElement);
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const authToken = localStorage.getItem('authToken');
+
+            if (!authToken) {
+                window.location.href = '/home/login/';
+            }
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
