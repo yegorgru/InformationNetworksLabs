@@ -8,6 +8,7 @@
 </head>
 <body>
     <div class="container mt-4">
+        <a class="btn btn-link btn-block" onclick="logout()">Log Out</a>
         <div class="form-group">
             <label for="dateInput">Select Date:</label>
             <input type="date" class="form-control" id="dateInput" value="{% now 'Y-m-d' %}">
@@ -21,6 +22,32 @@
     </div>
 
     <script>
+        function logout() {
+            const authToken = localStorage.getItem('authToken');
+            if (authToken) {
+                localStorage.removeItem('authToken');
+                fetch('/api/logout/', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                    },
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Logout successful');
+                        window.location.href = '/home/login/';
+                    } else {
+                        console.error('Logout failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during logout:', error);
+                });
+            } else {
+                window.location.href = '/home/login/';
+            }
+        }
+
         function fetchTasks(date) {
             const apiUrl = `/api/tasks/${date}`;
             fetch(apiUrl)
