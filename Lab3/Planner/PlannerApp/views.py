@@ -9,6 +9,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .models import Task
 from .serializers import TaskSerializer
+from django.shortcuts import get_object_or_404
 
 
 class SignUpView(APIView):
@@ -88,3 +89,39 @@ class CreateTaskView(APIView):
         }
 
         return Response(response_data, status=status.HTTP_201_CREATED)
+
+
+class TaskUpdateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, *args, **kwargs):
+        task_id = request.data.get('taskId')
+
+        if task_id is None:
+            return Response({'error': 'Task ID is required in the request data.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            task = Task.objects.get(id=task_id, user=request.user)
+        except Task.DoesNotExist:
+            return Response({'error': 'Task not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Update task attributes with new data
+        task.name = request.data.get('name', task.name)
+        task.description = request.data.get('description', task.description)
+        task.date = request.data.get('date', task.date)
+
+        task.save()
+        response_data = {
+            'message': 'Task updated successfully.'
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
+
+
+class TaskDetailsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, task_id, *args, **kwargs):
+        task = get_object_or_404(Task, id=task_id, user=request.user)
+        serializer = TaskSerializer(task)
+        return Response(serializer.data, status=status.HTTP_200_OK)

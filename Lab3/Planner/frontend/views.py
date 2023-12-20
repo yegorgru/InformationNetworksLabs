@@ -15,3 +15,7 @@ def index_view(request):
 
 def create_task(request):
     return render(request, 'create_task.html')
+
+
+def task(request, task_id):
+    return render(request, 'task.html', {'task_id': task_id})

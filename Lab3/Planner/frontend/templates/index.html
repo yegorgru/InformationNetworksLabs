@@ -33,9 +33,16 @@
                         const listItem = document.createElement('li');
                         listItem.className = 'list-group-item';
                         const statusIcon = task.status ? '✔' : ' ';
-                        listItem.innerHTML = `<strong>${task.name} ${statusIcon}</strong>`;
+                        listItem.innerHTML = `<strong class="task" data-task-id="${task.id}">${task.name} ${statusIcon}</strong>`;
                         taskList.appendChild(listItem);
-                        console.log(task.name);
+                    });
+
+                    const editTaskLinks = document.querySelectorAll('.task');
+                    editTaskLinks.forEach(link => {
+                        link.addEventListener('click', function () {
+                            const taskId = this.getAttribute('data-task-id');
+                            window.location.href = `/home/task/${taskId}/`;
+                        });
                     });
                 })
                 .catch(error => console.error('Error fetching tasks:', error));
