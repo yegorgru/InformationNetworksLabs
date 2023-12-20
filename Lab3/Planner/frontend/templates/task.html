@@ -27,7 +27,14 @@
                 <input type="date" class="form-control" id="taskDate" value="{% now 'Y-m-d' %}" required>
             </div>
 
-            <button type="button" class="btn btn-primary" onclick="updateTask()">Save</button>
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-success mx-2" onclick="completeTask()">Complete</button>
+
+                <button type="button" class="btn btn-primary mx-2" onclick="updateTask()">Save</button>
+
+                <button type="button" class="btn btn-danger mx-2" onclick="deleteTask()">Delete</button>
+            </div>
+
         </div>
     </div>
 
@@ -97,10 +104,42 @@
             .then(data => {
                 console.log('Task updated successfully:', data.message);
                 window.location.href = '/';
-                fetchTasksCurr();
             })
             .catch(error => {
                 console.log('Failed to update task');
+            });
+        }
+
+        function deleteTask() {
+            const taskId = {{ task_id }}; // Make sure you have the task_id available in your template
+
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const authToken = localStorage.getItem('authToken');
+
+            fetch(`/api/edit_task/`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                    'Authorization': `Bearer ${authToken}`,
+                },
+                body: JSON.stringify({ taskId }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    response.json().then(data => {
+                        displayError(data.error);
+                    });
+                    return Promise.reject();
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Task deleted successfully:', data.message);
+                window.location.href = '/';
+            })
+            .catch(error => {
+                console.log('Failed to delete task');
             });
         }
 

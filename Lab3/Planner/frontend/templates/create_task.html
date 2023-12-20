@@ -64,7 +64,6 @@
             .then(data => {
                 console.log('Task created successfully:', data.message);
                 window.location.href = '/';
-                fetchTasksCurr();
             })
             .catch(error => {
                 console.log('Failed to create task');

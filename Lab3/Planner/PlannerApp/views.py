@@ -105,7 +105,6 @@ class TaskUpdateView(APIView):
         except Task.DoesNotExist:
             return Response({'error': 'Task not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-        # Update task attributes with new data
         task.name = request.data.get('name', task.name)
         task.description = request.data.get('description', task.description)
         task.date = request.data.get('date', task.date)
@@ -113,6 +112,24 @@ class TaskUpdateView(APIView):
         task.save()
         response_data = {
             'message': 'Task updated successfully.'
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        task_id = request.data.get('taskId')
+
+        if task_id is None:
+            return Response({'error': 'Task ID is required in the request data.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            task = Task.objects.get(id=task_id, user=request.user)
+        except Task.DoesNotExist:
+            return Response({'error': 'Task not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        task.delete()
+        response_data = {
+            'message': 'Task deleted successfully.'
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
