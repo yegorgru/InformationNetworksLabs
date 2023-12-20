@@ -142,3 +142,27 @@ class TaskDetailsView(APIView):
         task = get_object_or_404(Task, id=task_id, user=request.user)
         serializer = TaskSerializer(task)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class CompleteTaskView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        task_id = request.data.get('taskId')
+
+        if task_id is None:
+            return Response({'error': 'Task ID is required in the request data.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            task = Task.objects.get(id=task_id, user=request.user)
+        except Task.DoesNotExist:
+            return Response({'error': 'Task not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        task.status = True
+        task.save()
+
+        response_data = {
+            'message': 'Task completed successfully.'
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
